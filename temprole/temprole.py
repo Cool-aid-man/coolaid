@@ -80,7 +80,7 @@ class TempRole(commands.Cog):
         """
         Assign a temporary role to expire after a time.
 
-        For the time, enter in terms of weeks (w), days (d), and/or hours (h).
+        For the time, enter in terms of weeks (w), days (d), and/or hours (h) and/or minutes.
         """
         if role in user.roles:
             return await ctx.send(f"That user already has {role.mention}!")
@@ -104,12 +104,12 @@ class TempRole(commands.Cog):
             if role not in user.roles:
                 await user.add_roles(
                     role,
-                    reason=f"TempRole: added by {ctx.author}, expires in <t:{int(end_time.timestamp())}:R>"
+                    reason=f"TempRole: added by {ctx.author}, expires <t:{int(end_time.timestamp())}:R>"
                 )
         else:
             return await ctx.send("I cannot assign this role!")
 
-        message = f"TempRole {role.mention} for {user.mention} has been added. Expires in <t:{int(end_time.timestamp())}:R>."
+        message = f"TempRole {role.mention} for {user.mention} has been added. Expires <t:{int(end_time.timestamp())}:R>."
         await self._maybe_confirm(ctx, message)
 
         await self._maybe_send_log(ctx.guild, message)
@@ -160,14 +160,14 @@ class TempRole(commands.Cog):
             if role not in ctx.author.roles:
                 await ctx.author.add_roles(
                     role,
-                    reason=f"TempRole: added by {ctx.author}, expires in <t:{int(end_time.timestamp())}:R>"
+                    reason=f"TempRole: added by {ctx.author}, expires <t:{int(end_time.timestamp())}:R>"
                 )
             else:
                 return await ctx.send("You already have this role!")
         else:
             return await ctx.send("I cannot assign this role!")
 
-        message = f"Self-TempRole {role.mention} has been added. Expires in <t:{int(end_time.timestamp())}:R>"
+        message = f"Self-TempRole {role.mention} has been added. Expires <t:{int(end_time.timestamp())}:R>"
         await self._maybe_confirm(ctx, message)
 
         await self._maybe_send_log(ctx.guild, message)
