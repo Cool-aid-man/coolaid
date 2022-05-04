@@ -1,14 +1,18 @@
 """
 MIT License
+
 Copyright (c) 2021-present Obi-Wan3
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
+
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,7 +34,7 @@ if typing.TYPE_CHECKING:
     TimeConverter = timedelta
 else:
     TimeConverter = commands.converter.TimedeltaConverter(
-        minimum=timedelta(hours=1),
+        minimum=timedelta(minutes=1),
         allowed_units=["weeks", "days", "hours", "minutes"],
         default_unit="hours"
     )
@@ -41,6 +45,7 @@ OVERFLOW_ERROR = "The time set is way too high, consider setting something reaso
 class TempRole(commands.Cog):
     """
     Assign Temporary Roles
+
     Give temporary roles to users, expiring after a set time.
     """
 
@@ -74,10 +79,9 @@ class TempRole(commands.Cog):
     async def _add(self, ctx: commands.Context, user: discord.Member, role: discord.Role, *, time: TimeConverter):
         """
         Assign a temporary role to expire after a time.
-        For the time, enter in terms of weeks (w), days (d), and/or hours (h) and/or minutes.
+
+        For the time, enter in terms of weeks (w), days (d), and/or hours (h).
         """
-        mins = time.seconds//60
-        hours = mins//60
         if role in user.roles:
             return await ctx.send(f"That user already has {role.mention}!")
 
@@ -100,12 +104,12 @@ class TempRole(commands.Cog):
             if role not in user.roles:
                 await user.add_roles(
                     role,
-                    reason=f"TempRole: added by {ctx.author}, expires <t:{int(end_time.timestamp())}:R>"
+                    reason=f"TempRole: added by {ctx.author}, expires in <t:{int(end_time.timestamp())}:R>"
                 )
         else:
             return await ctx.send("I cannot assign this role!")
 
-        message = f"TempRole {role.mention} for {user.mention} has been added. Expires <t:{int(end_time.timestamp())}:R>"
+        message = f"TempRole {role.mention} for {user.mention} has been added. Expires in <t:{int(end_time.timestamp())}:R>."
         await self._maybe_confirm(ctx, message)
 
         await self._maybe_send_log(ctx.guild, message)
@@ -156,14 +160,14 @@ class TempRole(commands.Cog):
             if role not in ctx.author.roles:
                 await ctx.author.add_roles(
                     role,
-                    reason=f"TempRole: added by {ctx.author}, expires <t:{int(end_time.timestamp())}:R>"
+                    reason=f"TempRole: added by {ctx.author}, expires in <t:{int(end_time.timestamp())}:R>"
                 )
             else:
                 return await ctx.send("You already have this role!")
         else:
             return await ctx.send("I cannot assign this role!")
 
-        message = f"Self-TempRole {role.mention} has been added. Expires <t:{int(end_time.timestamp())}:R>."
+        message = f"Self-TempRole {role.mention} has been added. Expires in <t:{int(end_time.timestamp())}:R>"
         await self._maybe_confirm(ctx, message)
 
         await self._maybe_send_log(ctx.guild, message)
